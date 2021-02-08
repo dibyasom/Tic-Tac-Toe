@@ -27,8 +27,9 @@ Configure your workspace, If you're on<br>
 Before getting hands dirty with coding, Let's think about the logic for a while, this will make the coding phase 10x simpler, and I'm not even exagerating.<br>
 
 <br>
-
-Well, here's the tic-tac-toe board plain and simple.
+ 
+So, where do we store the data, like the current state of the board, and what data structure to use? <br><br>
+_Well, here's the tic-tac-toe board plain and simple._
 
 |     |     |     |
 | --- | --- | --- |
@@ -38,13 +39,25 @@ Well, here's the tic-tac-toe board plain and simple.
 
 <br>
 
-Now, let's look at it with the perspective of a nerd. (Yes welcome to the world. :rocket:)
+_Now, let's look at it with the perspective of a nerd. (Yes, welcome to the world. :rocket:)_
 
 | Row 👇 / Col 👉 | 0   | 1   | 2   |
 | --------------- | --- | --- | --- |
 | **0**           | X   | O   | X   |
 | **1**           | X   | O   | X   |
 | **2**           | X   | O   | X   |
+
+<br>
+
+It's superevident right, we just need to take a matrix (2D array), and store 'X' or 'O' in respective locations, and that solves the data-structure pain.
+
+<hr>
+
+### Lets's write the code to create a 2D array.
+
+##### Ps, these are fully-functional code snippets without main (), by the end of this tutorial you'll be connecting the dots (or should I say functions) and make your own version of the complete code. :heart:
+
+<hr>
 
 <br>
 
