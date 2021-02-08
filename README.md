@@ -55,7 +55,86 @@ It's superevident right, we just need to take a matrix (2D array), and store 'X'
 
 ### Lets's write the code to create a 2D array.
 
-##### Ps, these are fully-functional code snippets without main (), by the end of this tutorial you'll be connecting the dots (or should I say functions) and make your own version of the complete code. :heart:
+###### Ps, these are fully-functional code snippets without main (), by the end of this tutorial you'll be connecting the dots (or should I say functions) and make your own version of the complete code. :heart:
+
+We will be using `malloc()` to create our arrays, cause we will be spitting the 2D-array (I might be refering to this as Matrix a lot.) accross many functions, also using the classic array declaration way is kinda nightmare.
+
+Syntax for malloc >
+
+```C
+<datatype>* <variableName> = (<datatype of array-elements>)malloc(sizeof(<datatype>)*numerOfElements);
+
+// If I want to declare an array 'jamesBond' with three elements of type int, here's how.
+int arrSize = 3;
+int* jamesBond = (int*)malloc(sizeof(int)*arrSize);
+```
+
+```C
+// Returns n*n dynamically alloted array.
+// This 2D array will be storing the state of the board.
+
+char** createBoard(int boardSize){
+
+    // Create an array of character pointers, each pointer will represent a row.
+    char **board = (char**)malloc(sizeof(char**)*boardSize);
+
+    // Assign a row to each pointer in array.
+    for(int i=0; i<boardSize; i++)
+        board[i] = (char*)malloc(sizeof(char)*boardSize);
+
+    // Return the freshly baked board.
+    return board;
+}
+```
+
+Having our array declared isn't enough right, let's put some user-friendly notation to refer to each block. The board should look something like,
+
+| Row 👇 / Col 👉 | 0   | 1   | 2   |
+| --------------- | --- | --- | --- |
+| **0**           | A   | B   | C   |
+| **1**           | D   | E   | F   |
+| **2**           | G   | H   | I   |
+
+Now the user can just drop a character to refer to any specific shell, easy-peasy?<br>Here's the code to do that.
+
+```C
+void labelBoard(char** board, int boardSize){
+    char currLabel = 'A'; // Label for cell (0,0)
+                          // Rest will follow.
+    // Loop and label.
+    for(int i=0; i<boardSize; i++)
+        for(int j=0; j<boardSize; j++)
+            board[i][j] = currLabel++;
+}
+```
+
+Since we're at it let's also write the code to print the board.
+
+```C
+void displayBoard(char** board, int boardSize){
+    int unitSize;
+
+    for(int i=0; i<boardSize; i++){
+
+        //Prints the row.
+        for(int j=0; j<boardSize; j++)
+            unitSize = printf("| %c |", board[i][j]);
+        printf("\n");
+
+        //Prints the row separator.
+        for(int k=0; k<=unitSize*boardSize; k++)
+            printf("-");
+        printf("\n");
+    }
+}
+```
+
+Having done that, we jusr figured out 30% of the project, Kudos!
+
+> Output of these functions combined.
+> ![Output img, reload to refresh.](./Resources/board.png)
+
+<br><br>
 
 <hr>
 
