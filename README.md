@@ -95,7 +95,7 @@ Having our array declared isn't enough right, let's put some user-friendly notat
 | **1**           | D   | E   | F   |
 | **2**           | G   | H   | I   |
 
-Now the user can just drop a character to refer to any specific shell, easy-peasy?<br>Here's the code to do that.
+Now the user can just drop a character to refer to any specific cell, easy-peasy?<br>Here's the code to do that.
 
 ```C
 void labelBoard(char** board, int boardSize){
@@ -129,7 +129,7 @@ void displayBoard(char** board, int boardSize){
 }
 ```
 
-Having done that, we jusr figured out 30% of the project, Kudos!
+Having done that, we just figured out 30% of the project, Kudos!
 
 > Output of these functions combined.
 > ![Output img, reload to refresh.](./Resources/board.png)

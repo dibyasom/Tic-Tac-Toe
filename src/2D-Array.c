@@ -34,12 +34,13 @@ void displayBoard(char** board, int boardSize){
             printf("-");
         printf("\n");
     }
+    printf("\n");
 }
 
 int main(void){
 
-    int boardSize = 4;
-    printf("Creating board.\n");/**/
+    int boardSize = 3;
+    printf("Creating board...\n\n");/**/
     char** board = createBoard(boardSize);
 
     labelBoard(board, boardSize);
