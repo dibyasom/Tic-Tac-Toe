@@ -6,7 +6,7 @@ char** createBoard(int boardSize){
     // This 2D array will be storing the state of the board.
 
     // Create an array of character pointers, each pointer will represent a row.
-    char **board = (char**)malloc(sizeof(char)*boardSize); 
+    char **board = (char**)malloc(sizeof(char**)*boardSize); 
     
     // Assign a row to each pointer in array.
     for(int i=0; i<boardSize; i++)
@@ -17,7 +17,7 @@ char** createBoard(int boardSize){
 }
 
 void labelBoard(char** board, int boardSize){
-    char currLabel = 'A';
+    char currLabel = 'a';
 
     for(int i=0; i<boardSize; i++)
         for(int j=0; j<boardSize; j++)
@@ -25,20 +25,23 @@ void labelBoard(char** board, int boardSize){
 }
 
 void displayBoard(char** board, int boardSize){
+    int unitSize;
     for(int i=0; i<boardSize; i++){
-        printf("%c", board[i][0]);
         for(int j=0; j<boardSize; j++)
-            printf(" %c ", board[i][j]);
+            unitSize = printf("| %c |", board[i][j]);
+        printf("\n");
+        for(int k=0; k<=unitSize*boardSize; k++)
+            printf("-");
         printf("\n");
     }
 }
 
 int main(void){
 
-    int boardSize = 0;
+    int boardSize = 4;
     printf("Creating board.\n");/**/
     char** board = createBoard(boardSize);
-    printf("Sizeof board -> %lu\n", sizeof(board[0]));/**/
+
     labelBoard(board, boardSize);
     displayBoard(board, boardSize);
     free(board);
