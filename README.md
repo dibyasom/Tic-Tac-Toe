@@ -1,3 +1,3 @@
-# :sparkle: Project Tictactoe :sparkle:
+# :sparkles: Project Tictactoe :sparkles:
 
 CLI interface based classic tic-tac-toe board game, in C.
