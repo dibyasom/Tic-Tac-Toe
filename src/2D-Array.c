@@ -17,7 +17,7 @@ char** createBoard(int boardSize){
 }
 
 void labelBoard(char** board, int boardSize){
-    char currLabel = 'a';
+    char currLabel = 'A';
 
     for(int i=0; i<boardSize; i++)
         for(int j=0; j<boardSize; j++)
@@ -25,26 +25,54 @@ void labelBoard(char** board, int boardSize){
 }
 
 void displayBoard(char** board, int boardSize){
+    system("clear"); printf("\n\n");
+
     int unitSize;
     for(int i=0; i<boardSize; i++){
-        for(int j=0; j<boardSize; j++)
-            unitSize = printf("| %c |", board[i][j]);
+        for(int j=0; j<boardSize; j++){
+            if(j<boardSize-1)
+                unitSize = printf(" %c |", board[i][j]);
+            else
+                unitSize = printf(" %c ", board[i][j]);
+        }
         printf("\n");
-        for(int k=0; k<=unitSize*boardSize; k++)
-            printf("-");
+
+        if(i < boardSize-1)
+            for(int k=0; k<=unitSize*boardSize; k++)
+                printf("-");
+            
         printf("\n");
     }
     printf("\n");
 }
+
+char** fetchPlayerIds(){
+    char** playerNames = (char**)malloc(sizeof(char**)*2);
+
+    for(int i=0; i<2; i++){
+        playerNames[i] = (char*)malloc(sizeof(char)*30);
+        printf("Player %d > ", (i+1));
+        scanf("\n");
+        scanf("%[^\n]%*c", playerNames[i]);
+    }
+
+    return playerNames;
+}
+
+
 
 int main(void){
 
     int boardSize = 3;
     printf("Creating board...\n\n");/**/
     char** board = createBoard(boardSize);
-
     labelBoard(board, boardSize);
     displayBoard(board, boardSize);
+
+    char** playerIds = fetchPlayerIds();
+    // runGame(board, boardSize);
     free(board);
+
+
     return 0;
 }
