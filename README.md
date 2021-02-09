@@ -171,7 +171,6 @@ Having done that, we just figured out 30% of the project, Kudos!
 
 ## Well the logic is really straightforward.
 
-```
 - [x] Create a 2d array of size 3\*3. {More on this later}
 - [x] Fill those with a to (a+9).
 - [ ] Loop begins.
@@ -181,4 +180,3 @@ Having done that, we just figured out 30% of the project, Kudos!
   - [ ] If win-condition is satisfied >
     - [ ] Display winner, exit.
     - [ ] else, continue.
-```
