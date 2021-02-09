@@ -139,25 +139,46 @@ oid displayBoard(char** board, int boardSize){
 }
 ```
 
-Having done that, we just figured out 30% of the project, Kudos!
-
 > Output of these functions combined.
 > ![Output img, reload to refresh.](./Resources/board.png)
 
-<br><br>
+<br>
+
+Let's write one last utility function, which returns an array of playerNames.
+
+```C
+char** fetchPlayerIds(){
+    char** playerNames = (char**)malloc(sizeof(char**)*2);
+
+    for(int i=0; i<2; i++){
+        playerNames[i] = (char*)malloc(sizeof(char)*30);
+        printf("Player %d > ", (i+1));
+        scanf("\n");
+        scanf("%[^\n]%*c", playerNames[i]);
+    }
+
+    return playerNames;
+}
+```
+
+<br>
+
+Having done that, we just figured out 30% of the project, Kudos!
 
 <hr>
 
 <br>
 
-### Well the logic is really straightforward.
+## Well the logic is really straightforward.
 
-- Create a 2d array of size 3\*3. {More on this later}
-- Fill those with a to (a+9).
-- Loop begins.
-  - Fetch an user input whichever cell.
-  - Update the cell with appropriate value accoring to player's number.
-  - Check for win-condition.
-  - If win-condition is satisfied >
-    - Display winner, exit.
-    - else, continue.
+```
+- [x] Create a 2d array of size 3\*3. {More on this later}
+- [x] Fill those with a to (a+9).
+- [ ] Loop begins.
+  - [ ] Fetch an user input whichever cell.
+  - [ ] Update the cell with appropriate value accoring to player's number.
+  - [ ] Check for win-condition.
+  - [ ] If win-condition is satisfied >
+    - [ ] Display winner, exit.
+    - [ ] else, continue.
+```
