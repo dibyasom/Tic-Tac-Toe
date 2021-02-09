@@ -69,9 +69,13 @@ int arrSize = 3;
 int* jamesBond = (int*)malloc(sizeof(int)*arrSize);
 ```
 
+<br>
+
 ```C
-// Returns n*n dynamically alloted array.
-// This 2D array will be storing the state of the board.
+/*
+ *  Returns n*n dynamically alloted array.
+ *  This 2D array will be storing the state of the board.
+ */
 
 char** createBoard(int boardSize){
 
@@ -111,21 +115,27 @@ void labelBoard(char** board, int boardSize){
 Since we're at it let's also write the code to print the board.
 
 ```C
-void displayBoard(char** board, int boardSize){
+oid displayBoard(char** board, int boardSize){
+    system("clear"); printf("\n\n"); //Clear stdout, and leave 2 lines.
+
     int unitSize;
-
     for(int i=0; i<boardSize; i++){
-
-        //Prints the row.
-        for(int j=0; j<boardSize; j++)
-            unitSize = printf("| %c |", board[i][j]);
+        for(int j=0; j<boardSize; j++){
+            if(j<boardSize-1)
+                unitSize = printf(" %c |", board[i][j]); //unitSize now holds length of string printed.
+            else
+                unitSize = printf(" %c ", board[i][j]);
+        }
         printf("\n");
 
-        //Prints the row separator.
-        for(int k=0; k<=unitSize*boardSize; k++)
-            printf("-");
+        if(i < boardSize-1)
+            for(int k=0; k<=unitSize*boardSize; k++) //Printing unitSize no. of '-' makes sure
+                                                     // The entire row is being covered.
+                printf("-");
+
         printf("\n");
     }
+    printf("\n");
 }
 ```
 
