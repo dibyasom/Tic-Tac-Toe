@@ -1,6 +1,8 @@
 #include<stdio.h>
 #include<stdlib.h>
 
+void displayBoard(char**, int);
+
 char** createBoard(int boardSize){ 
     // Returns n*n dynamically alloted array.
     // This 2D array will be storing the state of the board.
@@ -14,7 +16,7 @@ char** createBoard(int boardSize){
 
     // Return the freshly baked board.
     return board;
-}
+} 
 
 void labelBoard(char** board, int boardSize){
     char currLabel = 'A';
@@ -59,6 +61,35 @@ char** fetchPlayerIds(){
     return playerNames;
 }
 
+void runGame(char** board, int boardSize, char** playerIds){
+    char weapon[] = {'X', 'O'};
+    int playerTurn = 0;
+
+    while(1){
+        playerTurn = (playerTurn) ?0 :1;
+        /*
+        It's same as writing ... 
+
+        if(playerTurn==1)
+            playerTurn = 0;
+        else
+            playerTurn = 1;
+        */
+
+       displayBoard(board, boardSize); //Display current state.
+       printf("%s, your turn > \n", playerIds[playerTurn]);
+       
+       scanf("\n");
+       char choice; scanf("%c", &choice);
+
+       int alphaInd = choice-65;
+       int X = alphaInd/3;
+       int Y = alphaInd%3;
+       printf("{%d, %d}\n", X, Y);
+       board[X][Y] = weapon[playerTurn];
+    }
+}
+
 
 
 int main(void){
@@ -67,10 +98,9 @@ int main(void){
     printf("Creating board...\n\n");/**/
     char** board = createBoard(boardSize);
     labelBoard(board, boardSize);
-    displayBoard(board, boardSize);
 
     char** playerIds = fetchPlayerIds();
-    // runGame(board, boardSize);
+    runGame(board, boardSize, playerIds);
     free(board);
 
 
