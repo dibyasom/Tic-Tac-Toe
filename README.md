@@ -115,7 +115,7 @@ void labelBoard(char** board, int boardSize){
 Since we're at it let's also write the code to print the board.
 
 ```C
-oid displayBoard(char** board, int boardSize){
+void displayBoard(char** board, int boardSize){
     system("clear"); printf("\n\n"); //Clear stdout, and leave 2 lines.
 
     int unitSize;
