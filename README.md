@@ -2,7 +2,9 @@
 
 <br>
 
-## Hey there, I'm Dibyasom, and here's How to make a CLI tic-tac-toe game.
+## Hey there, I'm Dibyasom, and here's How to make a CLI tic-tac-toe game :heart: .
+
+![TicTacToe sneak-peek loading...](./Resources/board.gif)
 
 ### Before we begin, I'd like to tell you this,
 
