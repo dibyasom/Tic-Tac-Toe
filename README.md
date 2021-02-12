@@ -71,6 +71,24 @@ int* jamesBond = (int*)malloc(sizeof(int)*arrSize);
 
 <br>
 
+### Let's complicate things a bit,
+
+Now Imagine a situation where you have `multiple arrays, being used collectively for one goal`, For instance in tictactoe board, <br>
+
+- You could take three separate arrays, denoting each row of the board, and somehow manage those (which would be a nightmare) to represent your board, it's possible but a bad way to do it.
+- Better way exists? Yes ! _*YAYY*_ !!:sparkles: <br> - Make 3 separate arrays. - Make another array which stores pointers to these arrays. - That way you can manage all the three arrays, using a single variable.(Pointer type).
+  <br>
+
+### Same stuff, in SUPER SIMPLE TERMS> :brain:
+
+If this doesn't make sense, look at the code snippet below. <br>
+
+- I've created a `pointer-to-pointer` type array (names `board`), (Basically every element of this array will be pointer type, and hence the `**`. :rocket:)
+- Then I loop through all the elements of `board`, and use malloc to assign each of these elements an address to an array. <br>
+- TADAAA, Just by using `board` variable, I can access any element of any array assigned to it. - For instance, if I want 2nd element of 3rd array, I just have to use, <br>
+  `C char val = board[2][1]; //3rd row, 2nd element. `
+  <br>
+
 ```C
 /*
  *  Returns n*n dynamically alloted array.
@@ -180,3 +198,79 @@ Having done that, we just figured out 30% of the project, Kudos!
   - [ ] If win-condition is satisfied >
     - [ ] Display winner, exit.
     - [ ] else, continue.
+
+<br>
+
+### let's start with the loop.
+
+In simple terms, The game should run till Either player wins, or there's a draw. <br>
+Hence, we're gonna use a while loop, and break (up is silent :wink:) when any of above written condition occurs. <br>
+
+> Here's the code for that. :heart:
+
+```C
+void runGame(char** board, int boardSize, char** playerIds){
+    char weapon[] = {'X', 'O'};
+    int playerTurn = 0;
+
+    while(1){
+        playerTurn = (playerTurn) ?0 :1; //Swap players in every turn.
+        /*
+        It's same as writing ...
+
+        if(playerTurn==1)
+            playerTurn = 0;
+        else
+            playerTurn = 1;
+        */
+
+       displayBoard(board, boardSize); //Display current state.
+       printf("%s, your turn > \n", playerIds[playerTurn]);
+
+       scanf("\n");
+       char choice; scanf("%c", &choice); //Fetch user-choice.
+
+       // Convert character-choice to board co-ordinates, (Cus, it's more meaningful.)
+       // Scroll up to fetch the character mapping.
+
+       int alphaInd = choice-65;
+       int X = alphaInd / boardSize;
+       int Y = alphaInd % boardSize;
+       printf("{%d, %d}\n", X, Y);
+
+       while(board[X][Y] == 'X' || board[X][Y] == 'Y'){
+           printf("It's occupied blindy. Go again, new choice? \n");
+           scanf("\n");
+           scanf("%c", &choice); //Fetch user-choice.
+           alphaInd = choice-65;
+           X = alphaInd / boardSize;
+           Y = alphaInd % boardSize;
+       }
+        board[X][Y] = weapon[playerTurn];
+    }
+}
+
+```
+
+<br>
+
+Okay so there's a new term `playerIds` here? Woah!? What's that? <br>
+It's just another utility function to make the game kinda interactive.
+
+Code for fetching `playerIds`.
+
+```C
+/*Returns a string array, of size 2, having names of players.*/
+char** fetchPlayerIds(){
+    char** playerNames = (char**)malloc(sizeof(char**)*2);
+
+    for(int i=0; i<2; i++){
+        playerNames[i] = (char*)malloc(sizeof(char)*30);
+        printf("Player %d > ", (i+1));
+        scanf("\n");
+        scanf("%[^\n]%*c", playerNames[i]);
+    }
+
+    return playerNames;
+}
+```
