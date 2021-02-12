@@ -1,8 +1,11 @@
+// Authored by Dibyasom Puhan. I lub doggos.
+
 #include<stdio.h>
 #include<stdlib.h>
 
 void displayBoard(char**, int);
 void choiceToCoordinates(int*, int*, int);
+int checkWinCondition(char**, int, int);
 
 char** createBoard(int boardSize){ 
     // Returns n*n dynamically alloted array.
@@ -72,24 +75,37 @@ void choiceToCoordinates(int *x, int *y, int boardSize){
 
 int checkWinCondition(char** board, int boardSize, int playerTurn){
     for(int i=0; i<boardSize; i++){
-        char rowVal = board[i][0]; int rowCount;
-        char colVal = board[0][i]; int colCount;
+        char rowVal = board[i][0]; int rowMatch=0;
+        char colVal = board[0][i]; int colMatch=0;
         for(int j=0; j<boardSize; j++){
             if(board[i][j] == rowVal)
-                rowCount++;
+                rowMatch++;
             if(board[j][i] == colVal)
-                colCount++;
+                colMatch++;
         }
-        if(rowCount==3 || colCount==3)
+        if(rowMatch==3 || colMatch==3)
             return playerTurn;
     }
+    char leftD = board[0][0]; int leftDcount= 1;
+    char rightD = board[boardSize-1][boardSize-1]; int rightDcount= 1;
+    for(int i=1; i<boardSize; i++){
+        if(board[i][i] == leftD)
+            leftDcount++;
+        if(board[boardSize-1-i][i] == rightD)
+            rightDcount++;
+    }
+    if(leftDcount==3 || rightDcount==3)
+        return playerTurn;
+    return -1;
 }
 
 void runGame(char** board, int boardSize, char** playerIds){
     char weapon[] = {'X', 'O'};
     int playerTurn = 0, rounds = 0;
      
-    while(1){
+     displayBoard(board, boardSize); //Display current state.
+
+    while(rounds < 9){
         playerTurn = (playerTurn) ?0 :1;
         /*
         It's called TERNARY OPERATOR (Signified by ?,: operators.), same as writing ... 
@@ -99,23 +115,18 @@ void runGame(char** board, int boardSize, char** playerIds){
         else
             playerTurn = 1;
         */
-
-       displayBoard(board, boardSize); //Display current state.
-       printf("%s, your turn > \n", playerIds[playerTurn]);
        
-       if(rounds >= 9){
-           printf("Draw, nice.\n");
-           exit(0);
-       }
-       // Fetch user's move. Keep asking till a valid input is achieved.
+       // Fetch user's move. 
        int X,Y;
+       printf("%s, your turn > \n", playerIds[playerTurn]);
        choiceToCoordinates(&X, &Y, boardSize);
-
+    //    Keep asking till a valid input is achieved.
        while(board[X][Y]=='X' || board[X][Y]=='O'){ //Check for range too.
            printf("It's occupied blindy. Go again, new choice? \n");
            choiceToCoordinates(&X, &Y, boardSize);
        } 
-       board[X][Y] = weapon[playerTurn];
+       board[X][Y] = weapon[playerTurn]; // Update board.
+       displayBoard(board, boardSize); //Display current state.
        
        // Check if someone has won already, continuing further won't make any sense now.
        int winner = checkWinCondition(board, boardSize, playerTurn);
@@ -128,18 +139,18 @@ void runGame(char** board, int boardSize, char** playerIds){
     }
 }
 
-
-
 int main(void){
 
-    int boardSize = 3;
+    printf("\n\n\tWelcome to GTA-VI\t<Fake Rockstar Logo <3\n\n");
+    int boardSize;
+    printf("Boardsize: "); scanf("%d", &boardSize);
     printf("Creating board...\n\n");/**/
     char** board = createBoard(boardSize);
     labelBoard(board, boardSize);
 
     char** playerIds = fetchPlayerIds();
     runGame(board, boardSize, playerIds);
-    free(board);
+    free(board); // Clear all reserved memory and avoid possible memory leaks.
 
 
     return 0;

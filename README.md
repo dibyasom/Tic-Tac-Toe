@@ -96,6 +96,8 @@ If this doesn't make sense, look at the code snippet below. <br>
  */
 
 char** createBoard(int boardSize){
+    // Returns n*n dynamically alloted array.
+    // This 2D array will be storing the state of the board.
 
     // Create an array of character pointers, each pointer will represent a row.
     char **board = (char**)malloc(sizeof(char**)*boardSize);
@@ -113,17 +115,16 @@ Having our array declared isn't enough right, let's put some user-friendly notat
 
 | Row 👇 / Col 👉 | 0   | 1   | 2   |
 | --------------- | --- | --- | --- |
-| **0**           | A   | B   | C   |
-| **1**           | D   | E   | F   |
-| **2**           | G   | H   | I   |
+| **0**           | 0   | 1   | 2   |
+| **1**           | 3   | 4   | 5   |
+| **2**           | 6   | 7   | 8   |
 
-Now the user can just drop a character to refer to any specific cell, easy-peasy?<br>Here's the code to do that.
+Now the user can just drop a number to refer to any specific cell, easy-peasy?<br>Here's the code to do that.
 
 ```C
 void labelBoard(char** board, int boardSize){
-    char currLabel = 'A'; // Label for cell (0,0)
-                          // Rest will follow.
-    // Loop and label.
+    char currLabel = '0';
+
     for(int i=0; i<boardSize; i++)
         for(int j=0; j<boardSize; j++)
             board[i][j] = currLabel++;
@@ -134,21 +135,20 @@ Since we're at it let's also write the code to print the board.
 
 ```C
 void displayBoard(char** board, int boardSize){
-    system("clear"); printf("\n\n"); //Clear stdout, and leave 2 lines.
+    system("clear"); printf("\n\n");
 
     int unitSize;
     for(int i=0; i<boardSize; i++){
         for(int j=0; j<boardSize; j++){
             if(j<boardSize-1)
-                unitSize = printf(" %c |", board[i][j]); //unitSize now holds length of string printed.
+                unitSize = printf(" %c |", board[i][j]);
             else
                 unitSize = printf(" %c ", board[i][j]);
         }
         printf("\n");
 
         if(i < boardSize-1)
-            for(int k=0; k<=unitSize*boardSize; k++) //Printing unitSize no. of '-' makes sure
-                                                     // The entire row is being covered.
+            for(int k=0; k<=unitSize*boardSize; k++)
                 printf("-");
 
         printf("\n");
@@ -159,25 +159,6 @@ void displayBoard(char** board, int boardSize){
 
 > Output of these functions combined.
 > ![Output img, reload to refresh.](./Resources/board.png)
-
-<br>
-
-Let's write one last utility function, which returns an array of playerNames.
-
-```C
-char** fetchPlayerIds(){
-    char** playerNames = (char**)malloc(sizeof(char**)*2);
-
-    for(int i=0; i<2; i++){
-        playerNames[i] = (char*)malloc(sizeof(char)*30);
-        printf("Player %d > ", (i+1));
-        scanf("\n");
-        scanf("%[^\n]%*c", playerNames[i]);
-    }
-
-    return playerNames;
-}
-```
 
 <br>
 
@@ -211,12 +192,14 @@ Hence, we're gonna use a while loop, and break (up is silent :wink:) when any of
 ```C
 void runGame(char** board, int boardSize, char** playerIds){
     char weapon[] = {'X', 'O'};
-    int playerTurn = 0;
+    int playerTurn = 0, rounds = 0;
 
-    while(1){
-        playerTurn = (playerTurn) ?0 :1; //Swap players in every turn.
+     displayBoard(board, boardSize); //Display current state.
+
+    while(rounds < 9){
+        playerTurn = (playerTurn) ?0 :1;
         /*
-        It's same as writing ...
+        It's called TERNARY OPERATOR (Signified by ?,: operators.), same as writing ...
 
         if(playerTurn==1)
             playerTurn = 0;
@@ -224,37 +207,33 @@ void runGame(char** board, int boardSize, char** playerIds){
             playerTurn = 1;
         */
 
-       displayBoard(board, boardSize); //Display current state.
+       // Fetch user's move.
+       int X,Y;
        printf("%s, your turn > \n", playerIds[playerTurn]);
-
-       scanf("\n");
-       char choice; scanf("%c", &choice); //Fetch user-choice.
-
-       // Convert character-choice to board co-ordinates, (Cus, it's more meaningful.)
-       // Scroll up to fetch the character mapping.
-
-       int alphaInd = choice-65;
-       int X = alphaInd / boardSize;
-       int Y = alphaInd % boardSize;
-       printf("{%d, %d}\n", X, Y);
-
-       while(board[X][Y] == 'X' || board[X][Y] == 'Y'){
+       choiceToCoordinates(&X, &Y, boardSize);
+        //    Keep asking till a valid input is achieved.
+       while(board[X][Y]=='X' || board[X][Y]=='O'){ //Check for range too.
            printf("It's occupied blindy. Go again, new choice? \n");
-           scanf("\n");
-           scanf("%c", &choice); //Fetch user-choice.
-           alphaInd = choice-65;
-           X = alphaInd / boardSize;
-           Y = alphaInd % boardSize;
+           choiceToCoordinates(&X, &Y, boardSize);
        }
-        board[X][Y] = weapon[playerTurn];
+       board[X][Y] = weapon[playerTurn]; // Update board.
+       displayBoard(board, boardSize); //Display current state.
+
+       // Check if someone has won already, continuing further won't make any sense now.
+       int winner = checkWinCondition(board, boardSize, playerTurn);
+       if(winner != -1){
+           printf("%s wins, bow down yall. <3\n", playerIds[winner]);
+           exit(0);
+       }
+
+       rounds++;
     }
 }
-
 ```
 
 <br>
 
-Okay so there's a new term `playerIds` here? Woah!? What's that? <br>
+Okay so there're a few new terms like, `playerIds` here? Woah!? What's that? <br>
 It's just another utility function to make the game kinda interactive.
 
 Code for fetching `playerIds`.
@@ -274,3 +253,103 @@ char** fetchPlayerIds(){
     return playerNames;
 }
 ```
+
+<br>
+
+`choiceToCoordinates` sounds new too right? <br>
+It basically maps the choice entered (A random digit b/w 0 and 8 (inclusive)) to the specific cell in board that digigt refers to. :rocket: <br>
+Scroll up to see the mapping.
+
+> here's the code for `choiceToCoordinates`
+
+```C
+void choiceToCoordinates(int *x, int *y, int boardSize){
+       scanf("\n");
+       int choice; scanf("%d", &choice);
+
+       *x = choice / boardSize;
+       *y = choice % boardSize;
+}
+```
+
+<br>
+
+### Crucial of HIGHEST ORDER!
+
+This is the actuall stuff, the algo that keeps check of the win condition, <br>
+8 conditions have to be checked, 3 rows, 3 columns, and 2 diagonals.
+
+> Here's the code for that.
+
+```C
+int checkWinCondition(char** board, int boardSize, int playerTurn){
+    for(int i=0; i<boardSize; i++){
+        char rowVal = board[i][0]; int rowMatch=0;
+        char colVal = board[0][i]; int colMatch=0;
+        for(int j=0; j<boardSize; j++){
+            if(board[i][j] == rowVal)
+                rowMatch++;
+            if(board[j][i] == colVal)
+                colMatch++;
+        }
+        if(rowMatch==3 || colMatch==3)
+            return playerTurn;
+    }
+    char leftD = board[0][0]; int leftDcount= 1;
+    char rightD = board[boardSize-1][boardSize-1]; int rightDcount= 1;
+    for(int i=1; i<boardSize; i++){
+        if(board[i][i] == leftD)
+            leftDcount++;
+        if(board[boardSize-1-i][i] == rightD)
+            rightDcount++;
+    }
+    if(leftDcount==3 || rightDcount==3)
+        return playerTurn;
+    return -1;
+}
+```
+
+<br>
+
+### Driver Function
+
+Having come to this point, you have all the working pieces of the code, all you need to do, is create a main() and call all the functions in correct order, (or make more functions and make a better version :muscle:), Well I leave that to you guys.
+
+> Here's my main().
+
+```C
+int main(void){
+
+    printf("\n\n\tWelcome to GTA-VI\t<Fake Rockstar Logo <3\n\n");
+    int boardSize;
+    printf("Boardsize: "); scanf("%d", &boardSize);
+    printf("Creating board...\n\n");/**/
+    char** board = createBoard(boardSize);
+    labelBoard(board, boardSize);
+
+    char** playerIds = fetchPlayerIds();
+    runGame(board, boardSize, playerIds);
+    free(board);
+
+
+    return 0;
+}
+```
+
+### Caution
+
+Incase you run into error, it's probably because of missing function prototypes. <br>
+
+Just add this below library inclusion statements.
+
+```C
+void displayBoard(char**, int);
+void choiceToCoordinates(int*, int*, int);
+int checkWinCondition(char**, int, int);
+```
+
+<br>
+
+Congo, for staying this long, and we just completed our miniproject. :sparkles:<br>
+
+> **IF THIS TUTORIAL HELPED YOU, DO STAR THIS REPOSITORY, Would make my day** :heart:
