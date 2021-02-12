@@ -2,6 +2,7 @@
 #include<stdlib.h>
 
 void displayBoard(char**, int);
+void choiceToCoordinates(int*, int*, int);
 
 char** createBoard(int boardSize){ 
     // Returns n*n dynamically alloted array.
@@ -19,7 +20,7 @@ char** createBoard(int boardSize){
 } 
 
 void labelBoard(char** board, int boardSize){
-    char currLabel = 'A';
+    char currLabel = '0';
 
     for(int i=0; i<boardSize; i++)
         for(int j=0; j<boardSize; j++)
@@ -61,14 +62,37 @@ char** fetchPlayerIds(){
     return playerNames;
 }
 
+void choiceToCoordinates(int *x, int *y, int boardSize){
+       scanf("\n");
+       int choice; scanf("%d", &choice);
+
+       *x = choice / boardSize;
+       *y = choice % boardSize;
+}
+
+int checkWinCondition(char** board, int boardSize, int playerTurn){
+    for(int i=0; i<boardSize; i++){
+        char rowVal = board[i][0]; int rowCount;
+        char colVal = board[0][i]; int colCount;
+        for(int j=0; j<boardSize; j++){
+            if(board[i][j] == rowVal)
+                rowCount++;
+            if(board[j][i] == colVal)
+                colCount++;
+        }
+        if(rowCount==3 || colCount==3)
+            return playerTurn;
+    }
+}
+
 void runGame(char** board, int boardSize, char** playerIds){
     char weapon[] = {'X', 'O'};
-    int playerTurn = 0;
-
+    int playerTurn = 0, rounds = 0;
+     
     while(1){
         playerTurn = (playerTurn) ?0 :1;
         /*
-        It's same as writing ... 
+        It's called TERNARY OPERATOR (Signified by ?,: operators.), same as writing ... 
 
         if(playerTurn==1)
             playerTurn = 0;
@@ -79,14 +103,28 @@ void runGame(char** board, int boardSize, char** playerIds){
        displayBoard(board, boardSize); //Display current state.
        printf("%s, your turn > \n", playerIds[playerTurn]);
        
-       scanf("\n");
-       char choice; scanf("%c", &choice);
+       if(rounds >= 9){
+           printf("Draw, nice.\n");
+           exit(0);
+       }
+       // Fetch user's move. Keep asking till a valid input is achieved.
+       int X,Y;
+       choiceToCoordinates(&X, &Y, boardSize);
 
-       int alphaInd = choice-65;
-       int X = alphaInd/3;
-       int Y = alphaInd%3;
-       printf("{%d, %d}\n", X, Y);
+       while(board[X][Y]=='X' || board[X][Y]=='O'){ //Check for range too.
+           printf("It's occupied blindy. Go again, new choice? \n");
+           choiceToCoordinates(&X, &Y, boardSize);
+       } 
        board[X][Y] = weapon[playerTurn];
+       
+       // Check if someone has won already, continuing further won't make any sense now.
+       int winner = checkWinCondition(board, boardSize, playerTurn);
+       if(winner != -1){
+           printf("%s wins, bow down yall. <3\n", playerIds[winner]);
+           exit(0);
+       }
+       
+       rounds++;
     }
 }
 
