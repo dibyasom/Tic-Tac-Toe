@@ -97,20 +97,22 @@ If this doesn't make sense, look at the code snippet below. <br>
  *  This 2D array will be storing the state of the board.
  */
 
-char** createBoard(int boardSize){
+char **createBoard(int boardSize)
+{
     // Returns n*n dynamically alloted array.
     // This 2D array will be storing the state of the board.
 
     // Create an array of character pointers, each pointer will represent a row.
-    char **board = (char**)malloc(sizeof(char**)*boardSize);
+    char **board = new char *[boardSize];
 
     // Assign a row to each pointer in array.
-    for(int i=0; i<boardSize; i++)
-        board[i] = (char*)malloc(sizeof(char)*boardSize);
+    for (int i = 0; i < boardSize; i++)
+        board[i] = new char[boardSize];
 
     // Return the freshly baked board.
     return board;
 }
+
 ```
 
 Having our array declared isn't enough right, let's put some user-friendly notation to refer to each block. The board should look something like,
