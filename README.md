@@ -59,16 +59,16 @@ It's superevident right, we just need to take a matrix (2D array), and store 'X'
 
 ###### Ps, these are fully-functional code snippets without main (), by the end of this tutorial you'll be connecting the dots (or should I say functions) and make your own version of the complete code. :heart:
 
-We will be using `malloc()` to create our arrays, cause we will be spitting the 2D-array (I might be refering to this as Matrix a lot.) accross many functions, also using the classic array declaration way is kinda nightmare.
+We will be using `new` to create our arrays, cause we will be spitting the 2D-array (I might be refering to this as Matrix a lot.) accross many functions, also using the classic array declaration way is kinda nightmare.
 
 Syntax for malloc >
 
-```C
-<datatype>* <variableName> = (<datatype of array-elements>)malloc(sizeof(<datatype>)*numerOfElements);
+```C++
+<datatype>* <variableName> = new <datatype>[size];
 
 // If I want to declare an array 'jamesBond' with three elements of type int, here's how.
 int arrSize = 3;
-int* jamesBond = (int*)malloc(sizeof(int)*arrSize);
+int* jamesBond = new int[3];
 ```
 
 <br>
@@ -91,7 +91,7 @@ If this doesn't make sense, look at the code snippet below. <br>
   `C char val = board[2][1]; //3rd row, 2nd element. `
   <br>
 
-```C
+```C++
 /*
  *  Returns n*n dynamically alloted array.
  *  This 2D array will be storing the state of the board.
@@ -125,7 +125,7 @@ Having our array declared isn't enough right, let's put some user-friendly notat
 
 Now the user can just drop a number to refer to any specific cell, easy-peasy?<br>Here's the code to do that.
 
-```C
+```C++
 void labelBoard(char** board, int boardSize){
     char currLabel = '0';
 
@@ -137,27 +137,27 @@ void labelBoard(char** board, int boardSize){
 
 Since we're at it let's also write the code to print the board.
 
-```C
+```C++
 void displayBoard(char** board, int boardSize){
     system("clear"); printf("\n\n");
 
-    int unitSize;
+    int unitSize = 4*boardSize;
     for(int i=0; i<boardSize; i++){
         for(int j=0; j<boardSize; j++){
             if(j<boardSize-1)
-                unitSize = printf(" %c |", board[i][j]);
+                cout << " " << board[i][j] << " |";
             else
-                unitSize = printf(" %c ", board[i][j]);
+                cout << " " << board[i][j] << " ";
         }
-        printf("\n");
+        cout << endl;
 
         if(i < boardSize-1)
             for(int k=0; k<=unitSize*boardSize; k++)
-                printf("-");
+                cout << "-";
 
-        printf("\n");
+        cout << endl;
     }
-    printf("\n");
+    cout << endl;
 }
 ```
 
@@ -193,7 +193,7 @@ Hence, we're gonna use a while loop, and break (up is silent :wink:) when any of
 
 > Here's the code for that. :heart:
 
-```C
+```C++
 void runGame(char** board, int boardSize, char** playerIds){
     char weapon[] = {'X', 'O'};
     int playerTurn = 0, rounds = 0;
@@ -242,16 +242,15 @@ It's just another utility function to make the game kinda interactive.
 
 Code for fetching `playerIds`.
 
-```C
+```C++
 /*Returns a string array, of size 2, having names of players.*/
 char** fetchPlayerIds(){
-    char** playerNames = (char**)malloc(sizeof(char**)*2);
+    char** playerNames = new char*[2];
 
     for(int i=0; i<2; i++){
-        playerNames[i] = (char*)malloc(sizeof(char)*30);
-        printf("Player %d > ", (i+1));
-        scanf("\n");
-        scanf("%[^\n]%*c", playerNames[i]);
+        playerNames[i] = new char[30];
+        cout << "Player " << (i+1) << " > ";
+        cin >> playerNames[i];
     }
 
     return playerNames;
@@ -266,7 +265,7 @@ Scroll up to see the mapping.
 
 > here's the code for `choiceToCoordinates`
 
-```C
+```C++
 void choiceToCoordinates(int *x, int *y, int boardSize){
        scanf("\n");
        int choice; scanf("%d", &choice);
@@ -285,7 +284,7 @@ This is the actuall stuff, the algo that keeps check of the win condition, <br>
 
 > Here's the code for that.
 
-```C
+```C++
 int checkWinCondition(char** board, int boardSize, int playerTurn){
     for(int i=0; i<boardSize; i++){
         char rowVal = board[i][0]; int rowMatch=0;
@@ -321,13 +320,13 @@ Having come to this point, you have all the working pieces of the code, all you 
 
 > Here's my main().
 
-```C
+```C++
 int main(void){
 
-    printf("\n\n\tWelcome to GTA-VI\t<Fake Rockstar Logo <3\n\n");
+    cout << "\n\n\tWelcome to GTA-VI\t<Fake Rockstar Logo <3\n\n";
     int boardSize;
-    printf("Boardsize: "); scanf("%d", &boardSize);
-    printf("Creating board...\n\n");/**/
+    cout << "Boardsize: "; cin >> boardSize; 
+    cout << "Creating board...\n\n";/**/
     char** board = createBoard(boardSize);
     labelBoard(board, boardSize);
 
@@ -346,7 +345,7 @@ Incase you run into error, it's probably because of missing function prototypes.
 
 Just add this below library inclusion statements.
 
-```C
+```C++
 void displayBoard(char**, int);
 void choiceToCoordinates(int*, int*, int);
 int checkWinCondition(char**, int, int);

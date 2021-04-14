@@ -2,6 +2,8 @@
 
 #include <bits/stdc++.h>
 
+using namespace std;
+
 void displayBoard(char **, int);
 void choiceToCoordinates(int *, int *, int);
 int checkWinCondition(char **, int, int);
@@ -63,10 +65,9 @@ char **fetchPlayerIds()
 
     for (int i = 0; i < 2; i++)
     {
-        playerNames[i] = (char *)malloc(sizeof(char) * 30);
-        printf("Player %d > ", (i + 1));
-        scanf("\n");
-        scanf("%[^\n]%*c", playerNames[i]);
+        playerNames[i] = new char[30];
+        cout << "Player " << (i + 1) << " > ";
+        cin >> playerNames[i];
     }
 
     return playerNames;
@@ -126,7 +127,7 @@ void runGame(char **board, int boardSize, char **playerIds)
 
     while (rounds < 9)
     {
-        playerTurn = (playerTurn+1)%2;
+        playerTurn = (playerTurn + 1) % 2;
 
         int X, Y;
         printf("%s, your turn > \n", playerIds[playerTurn]);
